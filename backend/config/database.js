@@ -2,21 +2,23 @@
 const { Sequelize } = require('sequelize');
 
 // Create Sequelize instance with MySQL connection
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialect: 'mysql',
-  dialectOptions: {
-    ssl: {
-      rejectUnauthorized: true // required for cloud MySQL
+const sequelize = new Sequelize(
+    process.env.DB_NAME || 'expense_tracker', // Database name
+    process.env.DB_USER || 'root',             // MySQL username
+    process.env.DB_PASSWORD || '',             // MySQL password
+    {
+        host: process.env.DB_HOST || 'localhost',
+        dialect: 'mysql',
+        port: process.env.DB_PORT || 3306,
+        logging: false, // Set to console.log to see SQL queries
+        pool: {
+            max: 5,
+            min: 0,
+            acquire: 30000,
+            idle: 10000
+        }
     }
-  },
-  logging: false, // Set to console.log to see SQL queries
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  }
-});
+);
 
 // Test database connection
 const connectDB = async () => {
